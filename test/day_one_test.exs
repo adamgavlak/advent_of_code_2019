@@ -21,7 +21,25 @@ defmodule AdventOfCode.DayOneTest do
     end
 
     test "sum_of_all_modules returns correct fuel amount" do
-      assert DayOne.sum_of_all_modules() == 3150224
+      assert DayOne.sum_of_all_modules(&DayOne.calculate_fuel/1) == 3150224
+    end
+  end
+
+  describe "puzzle 2" do
+    test "Module of mass 14" do
+      assert DayOne.calculate_fuel_for_mass(14) == 2
+    end
+
+    test "Module of mass 1969" do
+      assert DayOne.calculate_fuel_for_mass(1969) == 966
+    end
+
+    test "Module of mass 100756" do
+      assert DayOne.calculate_fuel_for_mass(100756) == 50346
+    end
+
+    test "Sum should be right" do
+      assert DayOne.sum_of_all_modules(&DayOne.calculate_fuel_for_mass/1) == 4722484
     end
   end
 end
