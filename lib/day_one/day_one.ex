@@ -22,7 +22,7 @@ defmodule AdventOfCode.DayOne do
     |> String.split("\n")
     |> Stream.map(&String.to_integer/1)
     |> Stream.map(&(Task.async(fn -> calc_fn.(&1) end)))
-    |> Enum.map(&Task.await/1)
+    |> Stream.map(&Task.await/1)
     |> Enum.sum()
   end
 end
