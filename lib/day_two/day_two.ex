@@ -1,5 +1,4 @@
 defmodule AdventOfCode.DayTwo do
-
   def restore_program(program, offset \\ 0)
   def restore_program(program, offset) when is_binary(program) do
     program
@@ -34,14 +33,35 @@ defmodule AdventOfCode.DayTwo do
     end
   end
 
-  def run() do
-    input = File.read!("./lib/day_two/input")
-
+  def run(input, noun \\ 12, verb \\ 2) do
     input
     |> String.split(",")
-    |> List.update_at(1, fn _ -> "12" end)
-    |> List.update_at(2, fn _ -> "2" end)
+    |> List.update_at(1, fn _ -> to_string(noun) end)
+    |> List.update_at(2, fn _ -> to_string(verb) end)
     |> Enum.join(",")
     |> restore_program()
+  end
+
+  def find_instructions do
+    input = File.read!("./lib/day_two/input")
+
+    {:ok, noun, verb} =
+      Enum.flat_map(0..99, fn noun ->
+        Enum.map(0..99, fn verb ->
+          Task.async(fn ->
+            case run(input, noun, verb) do
+              19690720 -> {:ok, noun, verb}
+              _ -> :error
+            end
+          end)
+        end)
+      end)
+      |> Enum.map(&Task.await/1)
+      |> Enum.find(fn
+        {:ok, _noun, _verb} -> true
+        _ -> false
+      end)
+
+    (100 * noun) + verb
   end
 end
